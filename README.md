@@ -120,6 +120,10 @@ The app will compute the optimal production quantities for each product type.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## More Stuff
+
+Document:https://docs.google.com/document/d/1Ry2sEIA5kxxWDe7Zf91vtLFVA-1dihvGiq8kAtWoyt8/edit?tab=t.0
+
 ## Author
 
 Brayan Estiven Aguirre Aristizabal - Universidad Distrital
