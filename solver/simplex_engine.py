@@ -6,6 +6,12 @@ class SimplexSolver:
         num_vars = len(c)
         num_restricciones = len(b)
         
+        nombres_columnas = (
+            [f"X{i+1}" for i in range(len(c))] +
+            [f"S{i+1}" for i in range(len(b))]
+        )
+        variables_base = [f"S{i+1}" for i in range(len(b))]
+
         # Tabla inicial [ A | I | b ]
         columnas_totales = num_vars + num_restricciones + 1
         tabla = np.zeros((num_restricciones + 1, columnas_totales))
@@ -18,7 +24,10 @@ class SimplexSolver:
         for j in range(num_vars):
             tabla[-1, j] = -c[j]
             
-        tablas_historial = [np.copy(tabla)]
+        tablas_historial = [{
+            "tabla": np.copy(tabla),
+            "base": variables_base.copy()
+        }]
         iteracion = 0
         
         while True:
@@ -37,6 +46,7 @@ class SimplexSolver:
                 raise ValueError("El problema no está acotado.")
                 
             fila_pivote = np.argmin(razones)
+            variables_base[fila_pivote] = nombres_columnas[col_pivote]
             valor_pivote = tabla[fila_pivote, col_pivote]
             tabla[fila_pivote, :] /= valor_pivote
             
@@ -45,7 +55,10 @@ class SimplexSolver:
                     multiplicador = tabla[i, col_pivote]
                     tabla[i, :] -= multiplicador * tabla[fila_pivote, :]
                     
-            tablas_historial.append(np.copy(tabla))
+            tablas_historial.append({
+                "tabla": np.copy(tabla),
+                "base": variables_base.copy()
+            })
             iteracion += 1
             if iteracion > 50: break
                 

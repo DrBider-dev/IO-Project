@@ -19,6 +19,13 @@ def main(page: ft.Page):
             page.theme_mode = ft.ThemeMode.LIGHT
             theme_button.icon = ft.Icons.DARK_MODE_OUTLINED
             theme_button.tooltip = "Cambiar a modo oscuro"
+
+        if resumen_final:
+            resumen_final.bgcolor = (
+                Style.BG_LIGHT
+                if page.theme_mode == ft.ThemeMode.LIGHT
+                else Style.BG_DARK
+            )
         page.update()
 
     # Botón de tema
@@ -78,7 +85,7 @@ def main(page: ft.Page):
         
         input_container.controls.append(create_card("Matriz de Restricciones", r_col))
         input_container.controls.append(
-            ft.ElevatedButton("Calcular Solución", icon=ft.Icons.ANALYTICS, 
+            ft.Button("Calcular Solución", icon=ft.Icons.ANALYTICS, 
                              on_click=run_calculation, bgcolor=Style.PRIMARY, color="white")
         )
         page.update()
@@ -96,17 +103,23 @@ def main(page: ft.Page):
             page.snack_bar.open = True
             page.update()
 
+
+    resumen_final = None
     def display_tables(tablas, nv, nr):
         results_container.controls.clear()
         
         # 1. Definir nombres de las columnas para las tablas
         cols = [f"X{i+1}" for i in range(nv)] + [f"S{i+1}" for i in range(nr)] + ["RHS"]
+        variables_base = [f"S{i+1}" for i in range(nr)] + ["Zj-Cj"]
         
         # 2. Renderizar cada tabla del proceso iterativo
-        for i, t in enumerate(tablas):
+        for i, info in enumerate(tablas):
+            t = info["tabla"]
+            variables_base = info["base"] + ["Zj-Cj"]
             dt = ft.DataTable(
-                columns=[ft.DataColumn(ft.Text(c, weight="bold")) for c in cols],
-                rows=[ft.DataRow(cells=[ft.DataCell(ft.Text(f"{v:.2f}")) for v in fila]) for fila in t]
+                columns=[ft.DataColumn(ft.Text("Base", weight="bold"))] + [ft.DataColumn(ft.Text(c, weight="bold"))for c in cols],
+
+                rows=[ft.DataRow(cells=[ft.DataCell(ft.Text(variables_base[idx],weight="bold"))] + [ft.DataCell(ft.Text(f"{v:.2f}"))for v in fila])for idx, fila in enumerate(t)]
             )
             title = f"Iteración {i}" + (" - ÓPTIMO" if i == len(tablas)-1 else "")
             results_container.controls.append(create_card(title, dt))
@@ -138,6 +151,7 @@ def main(page: ft.Page):
             )
 
         # Crear la tarjeta de resumen final
+        nonlocal resumen_final
         resumen_final = ft.Container(
             content=ft.Column([
                 ft.Text("RECOMENDACIÓN DE PRODUCCIÓN", size=20, weight="bold", color=Style.ACCENT),
@@ -179,4 +193,4 @@ def main(page: ft.Page):
     )
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.run(main)
