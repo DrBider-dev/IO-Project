@@ -5,14 +5,6 @@ from ui.components import Style
 def create_final_summary(tabla_optima, n_vars, method_selected):
     """
     Crea el resumen final con la recomendación de producción.
-    
-    Args:
-        tabla_optima: Tabla óptima (último tableau)
-        n_vars: Número de variables originales
-        method_selected: Método usado ('simplex' o 'dos_fases')
-    
-    Returns:
-        ft.Container con el resumen final
     """
     valor_maximo = tabla_optima[-1, -1]
     productos = ["Mesas de Comedor", "Sillas Tapizadas", "Libreros Modulares", "Escritorios Ergonómicos"]
@@ -33,11 +25,7 @@ def create_final_summary(tabla_optima, n_vars, method_selected):
     return ft.Container(
         content=ft.Column([
             ft.Text("RECOMENDACIÓN DE PRODUCCIÓN", size=20, weight="bold", color=Style.ACCENT),
-            ft.Text(
-                f"Método seleccionado: {metodo_texto}",
-                size=16,
-                weight="bold"
-            ),
+            ft.Text(f"Método seleccionado: {metodo_texto}", size=16, weight="bold"),
             ft.Text("Para maximizar la utilidad este mes, la empresa debe fabricar:", size=16),
             ft.Column(mensajes_produccion),
             ft.Divider(),
@@ -45,7 +33,7 @@ def create_final_summary(tabla_optima, n_vars, method_selected):
                     size=22, weight="bold", color=Style.PRIMARY),
         ], spacing=10),
         padding=30,
-        bgcolor=Style.BG_LIGHT,
+        # AL QUITAR EL BGCOLOR, QUEDA EXACTAMENTE IGUAL AL FONDO DE LA APP
         border_radius=15,
         border=ft.border.all(2, Style.ACCENT),
         margin=ft.margin.only(top=20)

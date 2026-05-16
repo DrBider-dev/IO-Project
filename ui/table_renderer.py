@@ -2,10 +2,21 @@ import flet as ft
 from ui.components import Style
 
 def _format_cell(value, highlighted=False, bold=False):
-    """Formatea una celda de tabla con estilos opcionales"""
+    """Formatea una celda de tabla con estilos opcionales adaptables"""
+    # Al dejar color=None, Flet usará blanco en modo oscuro y negro en modo claro automáticamente
     text = ft.Text(f"{value}", weight="bold" if bold else "normal")
+    
     if highlighted:
-        return ft.DataCell(ft.Container(content=text, bgcolor=Style.BG_LIGHT, padding=5))
+        # Usamos una opacidad ligera ("#20FFFFFF" en oscuro o una variante suave)
+        # Para ir a la fija en ambos modos, un fondo grisáceo sutil con bordes definidos:
+        return ft.DataCell(
+            ft.Container(
+                content=text, 
+                bgcolor="surfacecontainerhighest", # Variante nativa excelente para resaltar celdas
+                padding=5, 
+                border_radius=4
+            )
+        )
     return ft.DataCell(ft.Container(content=text, padding=5))
 
 def render_table(info):

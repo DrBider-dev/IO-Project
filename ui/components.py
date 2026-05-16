@@ -9,11 +9,13 @@ class Style:
 
 def create_header():
     return ft.Container(
+        expand=True,
         content=ft.Column([
             ft.Text("Investigación de Operaciones 1", size=28, weight="bold", color=Style.PRIMARY),
             ft.Text("Optimización de Producción - Universidad Distrital", size=16, color=ft.Colors.GREY_700),
             ft.Divider(color=Style.PRIMARY, height=20)
-        ]),
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER),
         margin=ft.margin.only(bottom=20)
     )
 

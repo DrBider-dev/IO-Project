@@ -64,8 +64,8 @@ def main(page: ft.Page):
             btn_dos_fases.color = "white"
         page.update()
 
-    btn_simplex = ft.ElevatedButton("Simplex", on_click=on_simplex_select, bgcolor=Style.PRIMARY, color="white")
-    btn_dos_fases = ft.ElevatedButton("Dos Fases", on_click=on_dos_fases_select, bgcolor=Style.SECONDARY, color="black")
+    btn_simplex = ft.Button("Simplex", on_click=on_simplex_select, bgcolor=Style.PRIMARY, color="white")
+    btn_dos_fases = ft.Button("Dos Fases", on_click=on_dos_fases_select, bgcolor=Style.SECONDARY, color="black")
 
     # --- Generación de formulario ---
     def on_generate_form(e):
@@ -76,6 +76,7 @@ def main(page: ft.Page):
                 raise ValueError("Mínimo 1 variable y 1 restricción")
             generate_form(n_v, n_r)
         except Exception as ex:
+            # Esta es la forma estándar y compatible con tu versión actual:
             page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ex}"))
             page.snack_bar.open = True
             page.update()
@@ -112,6 +113,13 @@ def main(page: ft.Page):
             # Mostrar resultados
             display_results(tablas, len(c))
         except Exception as ex:
+            # ¡ESTO ES LO CLAVE! Nos va a decir en la consola qué se está rompiendo
+            import traceback
+            print("\n--- ¡ERROR DETECTADO EN EL CÁLCULO! ---")
+            traceback.print_exc()
+            print("---------------------------------------\n")
+            
+            # Dejamos esto por si acaso, pero miraremos la terminal
             page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ex}"))
             page.snack_bar.open = True
             page.update()
@@ -130,14 +138,21 @@ def main(page: ft.Page):
         
         page.update()
 
+    def window_event(e):
+        if e.data == "close":
+            # Le da tiempo a Flet de limpiar sus componentes antes de destruir todo
+            page.window_close()
+
+    page.on_window_event = window_event
+
+
     # --- Layout ---
-    txt_vars = ft.TextField(label="Variables", width=120, hint_text="2")
-    txt_restrictions = ft.TextField(label="Restricciones", width=120, hint_text="3")
+    txt_vars = ft.TextField(label="Variables", width=150, hint_text="2")
+    txt_restrictions = ft.TextField(label="Restricciones", width=150, hint_text="3")
 
     header_row = ft.Row(
         controls=[create_header(), theme_button],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-        vertical_alignment=ft.CrossAxisAlignment.START
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
     )
 
     controls_row = ft.Row(

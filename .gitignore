@@ -1,0 +1,72 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# C extensions
+*.so
+
+# =========================
+# Entornos virtuales
+# =========================
+venv/
+.env/
+.env.*
+
+# =========================
+# Distribución / build
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# Logs y archivos temporales
+# =========================
+*.log
+*.tmp
+*.swp
+*.swo
+
+# =========================
+# Archivos de sistema
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Pytest / coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Jupyter (por si acaso)
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Flet (opcional)
+# =========================
+# Si en algún momento exportas apps
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# =========================
+# Otros
+# =========================
+*.sqlite3
+main.spec

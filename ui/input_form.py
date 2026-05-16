@@ -27,7 +27,7 @@ def render_input_form(n_v, n_r, on_calculate):
         inputs_c.append(field)
         c_row.controls.append(field)
     
-    input_container.controls.append(create_card("Márgenes de Contribución (Z)", c_row))
+    input_container.controls.append(create_card("Coeficientes de la Función Objetivo", c_row))
 
     # Restricciones
     r_col = ft.Column(spacing=10)
