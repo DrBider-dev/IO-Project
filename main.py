@@ -148,16 +148,22 @@ def main(page: ft.Page):
             btn_dos_fases,
             ft.IconButton(ft.Icons.SETTINGS_SUGGEST_OUTLINED, on_click=on_generate_form),
         ],
-        alignment="center",
+        alignment=ft.MainAxisAlignment.CENTER,
         wrap=True
     )
 
-    page.add(
-        header_row,
-        controls_row,
-        input_container,
-        results_container
+    main_container = ft.Column(
+        controls=[
+            header_row,
+            controls_row,
+            input_container,
+            results_container
+        ],
+        alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )
+
+    page.add(main_container)
 
 if __name__ == "__main__":
     ft.run(main)
