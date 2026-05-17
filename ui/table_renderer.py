@@ -84,7 +84,7 @@ def render_table(info):
             padding=20
         ),
         elevation=3,
-        margin=ft.margin.only(bottom=15)
+        margin=ft.Margin(bottom=15)
     )
 
 def render_all_tables_cascade(tablas_historial):

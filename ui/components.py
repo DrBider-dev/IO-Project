@@ -16,7 +16,7 @@ def create_header():
             ft.Divider(color=Style.PRIMARY, height=20)
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        margin=ft.margin.only(bottom=20)
+        margin=ft.Margin(bottom=20)
     )
 
 def create_card(title, content_ui):

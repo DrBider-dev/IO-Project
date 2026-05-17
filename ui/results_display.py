@@ -35,6 +35,6 @@ def create_final_summary(tabla_optima, n_vars, method_selected):
         padding=30,
         # AL QUITAR EL BGCOLOR, QUEDA EXACTAMENTE IGUAL AL FONDO DE LA APP
         border_radius=15,
-        border=ft.border.all(2, Style.ACCENT),
-        margin=ft.margin.only(top=20)
+        border=ft.Border.all(2, Style.ACCENT),
+        margin=ft.Margin(top=20)
     )
