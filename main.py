@@ -113,15 +113,24 @@ def main(page: ft.Page):
             # Mostrar resultados
             display_results(tablas, len(c))
         except Exception as ex:
-            # ¡ESTO ES LO CLAVE! Nos va a decir en la consola qué se está rompiendo
-            import traceback
-            print("\n--- ¡ERROR DETECTADO EN EL CÁLCULO! ---")
-            traceback.print_exc()
-            print("---------------------------------------\n")
-            
-            # Dejamos esto por si acaso, pero miraremos la terminal
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ex}"))
-            page.snack_bar.open = True
+
+            def close_dialog(e):
+                dialog.open = False
+                page.update()
+
+            msg = str(ex)
+
+            dialog = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Error en el cálculo"),
+                content=ft.Text(msg),
+                actions=[
+                    ft.TextButton("Cerrar", on_click=close_dialog)
+                ],
+                actions_alignment=ft.MainAxisAlignment.END,
+            )
+
+            page.show_dialog(dialog)
             page.update()
 
     def display_results(tablas, n_vars):
