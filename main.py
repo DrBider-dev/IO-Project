@@ -1,5 +1,22 @@
+import os
+import sys
+import ssl
+
+# ── Fix SSL para ejecutables PyInstaller en Windows ──────────────────────────
+if getattr(sys, 'frozen', False):          # solo cuando corre como .exe
+    try:
+        import certifi
+        os.environ['SSL_CERT_FILE']      = certifi.where()
+        os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
+    except ImportError:
+        # Fallback: deshabilitar verificación (menos seguro)
+        ssl._create_default_https_context = ssl._create_unverified_context
+# ─────────────────────────────────────────────────────────────────────────────
+
+
 import flet as ft
 import numpy as np
+import traceback
 from solver.solver_wrapper import SolverWrapper
 from ui.components import Style, create_header
 from ui.input_form import render_input_form
@@ -68,6 +85,28 @@ def main(page: ft.Page):
     btn_dos_fases = ft.Button("Dos Fases", on_click=on_dos_fases_select, bgcolor=Style.SECONDARY, color="black")
 
     # --- Generación de formulario ---
+    def show_error_dialog(title, message, traceback_text=None):
+        content = [ft.Text(message)]
+        if traceback_text:
+            content.append(ft.Text(traceback_text, size=12))
+
+        def close_dialog(e):
+            dialog.open = False
+            page.update()
+
+        dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(title),
+            content=ft.Column(content, tight=True),
+            actions=[
+                ft.TextButton("Cerrar", on_click=close_dialog)
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        page.show_dialog(dialog)
+        page.update()
+
     def on_generate_form(e):
         try:
             n_v = int(txt_vars.value)
@@ -76,10 +115,11 @@ def main(page: ft.Page):
                 raise ValueError("Mínimo 1 variable y 1 restricción")
             generate_form(n_v, n_r)
         except Exception as ex:
-            # Esta es la forma estándar y compatible con tu versión actual:
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ex}"))
-            page.snack_bar.open = True
-            page.update()
+            traceback.print_exc()
+            show_error_dialog(
+                "Error al generar el formulario",
+                "Por favor, ingresa valores válidos: mínimo 1 variable y 1 restricción"
+            )
 
     def generate_form(n_v, n_r):
         input_container.controls.clear()
@@ -114,24 +154,11 @@ def main(page: ft.Page):
             display_results(tablas, len(c))
         except Exception as ex:
 
-            def close_dialog(e):
-                dialog.open = False
-                page.update()
-
-            msg = str(ex)
-
-            dialog = ft.AlertDialog(
-                modal=True,
-                title=ft.Text("Error en el cálculo"),
-                content=ft.Text(msg),
-                actions=[
-                    ft.TextButton("Cerrar", on_click=close_dialog)
-                ],
-                actions_alignment=ft.MainAxisAlignment.END,
+            user_msg = str(ex) if str(ex) else "Ocurrió un error al calcular. Verifica los datos ingresados."
+            show_error_dialog(
+                "Error en el cálculo",
+                f"No se pudo resolver el problema. Por favor verifica que todos los datos sean válidos.\nDetalle: {user_msg}"
             )
-
-            page.show_dialog(dialog)
-            page.update()
 
     def display_results(tablas, n_vars):
         results_container.controls.clear()
